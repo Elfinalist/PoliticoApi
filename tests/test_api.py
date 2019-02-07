@@ -29,3 +29,23 @@ def test_delete_political_party(client):
     response = client.delete('/api/v1/parties/1', content_type='application/json')
     response_data = response.get_json()
     assert response_data["data"]["message"] == "political party sucessfully deleted"
+
+
+
+def test_create_political_office(client):
+    payload = {
+        "name": "president",
+        "office_type": "federal",
+    }
+
+    response = client.post('api/v1/offices',data = json.dumps(payload), content_type = 'application/json')
+    response_data = response.get_json()
+    assert response_data["status"] == 201
+    assert response_data["data"]["name"] == "president"
+    assert response_data["data"]["office_type"] == "federal"
+    assert "id" in response_data["data"]
+
+
+
+
+
