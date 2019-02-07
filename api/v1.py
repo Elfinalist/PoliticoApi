@@ -67,8 +67,7 @@ def party(id):
         return jsonify(response), response["status"]
 
 
-@v1.route("/office", methods=["POST", "GET"])
-
+@v1.route("/offices", methods=["POST", "GET"])
 def office():
     response = {}
     if (request.method == 'POST'):
@@ -76,9 +75,7 @@ def office():
             office_data = request.json
             office_name = office_data["name"]
             office_type = office_data["office_type"]
-
             #create political office
-
             office = politico.create_political_office(office_name,office_type)
             response ["status"] = 201
             response ["data"] = office

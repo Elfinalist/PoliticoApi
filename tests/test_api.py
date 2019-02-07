@@ -38,7 +38,7 @@ def test_create_political_office(client):
         "office_type": "federal",
     }
 
-    response = client.post('api/v1/office',data = json.dumps(payload), content_type = 'application/json')
+    response = client.post('api/v1/offices',data = json.dumps(payload), content_type = 'application/json')
     response_data = response.get_json()
     assert response_data["status"] == 201
     assert response_data["data"]["name"] == "president"

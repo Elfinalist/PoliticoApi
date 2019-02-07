@@ -7,7 +7,7 @@ class Politico():
         self.party_id_count = 0
         self.political_parties = []
         self.office_id_count = 0
-        self.political_office = []
+        self.political_offices = []
 
     def create_political_party(self, name, hq, logo_url):
         if(name is None or len(name) == 0):
@@ -50,20 +50,9 @@ class Politico():
             raise InputError ('type is required when creating a political office')
 
         self.office_id_count += 1
-        new_office = political_office(self.office_id_count, name, office_type)
-        self.political_office.append(new_office)
+        new_office = PoliticalOffice(self.office_id_count, name, office_type)
+        self.political_offices.append(new_office)
         return new_office
-
-
-    
-
-
-
-
-
-
-    
-
 
 class PoliticalParty(dict):
     def __init__(self, id, name, hq, logo_url):
@@ -72,7 +61,7 @@ class PoliticalParty(dict):
         self["hq"] = hq
         self["logoUrl"] = logo_url
 
-class political_office(dict):
+class PoliticalOffice(dict):
     def __init__(self, id, name, office_type):
         self["id"] = id
         self["name"] = name
