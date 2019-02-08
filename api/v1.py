@@ -118,9 +118,3 @@ def get_office(id):
             response["status"] = 404
             response["error"] = "political office not found"
         return jsonify(response), response["status"]
-
-
-
-
-
-
