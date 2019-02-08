@@ -65,7 +65,18 @@ def party(id):
             response["status"] = 404
             response["error"] = "political party not found"
         return jsonify(response), response["status"]
-
+    elif(request.method == 'PUT'):
+        try:
+            party_data = request.json
+            new_name = party_data["name"]
+            response_data = politico.edit_political_party(id, new_name)
+            response["status"] = 200
+            response["data"] = response_data
+            return jsonify(response), response["status"]
+        except InputError as error:
+            response["status"] = 404
+            response["error"] = error.message
+            return jsonify(response), response["status"]
 
 @v1.route("/offices", methods=["POST", "GET"])
 def office():
@@ -118,3 +129,15 @@ def get_office(id):
             response["status"] = 404
             response["error"] = "political office not found"
         return jsonify(response), response["status"]
+    elif (request.method == "PUT"):
+        try:
+            office_data = request.json
+            new_name = office_data["name"]
+            response_data = politico.edit_political_office(id, new_name)
+            response["status"] = 200
+            response["data"] = response_data
+            return jsonify(response), response["status"]
+        except InputError as error:
+            response["status"] = 404
+            response["error"] = error.message
+            return jsonify(response), response["status"]

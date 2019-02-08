@@ -34,13 +34,22 @@ def test_get_political_party(client):
     assert "id" in response_data["data"]
     assert response_data["data"]["id"] == 1
 
+def test_edit_political_party(client):
+    payload = {
+        "name": "Kanu Edit"
+    }
+    data = json.dumps(payload)
+    response = client.put('/api/v1/parties/1', data = json.dumps(payload), content_type='application/json')
+    response_data = response.get_json()
+    assert "id" in response_data["data"]
+    assert response_data["data"]["id"] == 1
+    assert response_data["data"]["name"] == "Kanu Edit"
+
 
 def test_delete_political_party(client):
     response = client.delete('/api/v1/parties/1', content_type='application/json')
     response_data = response.get_json()
     assert response_data["data"]["message"] == "political party sucessfully deleted"
-
-
 
 def test_create_political_office(client):
     payload = {
@@ -69,11 +78,22 @@ def test_get_political_office(client):
     assert "id" in response_data["data"]
     assert response_data["data"]["id"] == 1
 
+def test_edit_political_office(client):
+    payload = {
+        "name": "Deputy President"
+    }
+    data = json.dumps(payload)
+    response = client.put('/api/v1/offices/1', data = json.dumps(payload), content_type='application/json')
+    response_data = response.get_json()
+    print(response)
+    assert "id" in response_data["data"]
+    assert response_data["data"]["id"] == 1
+    assert response_data["data"]["name"] == "Deputy President"
+
+
 def test_delete_political_office(client):
     response = client.delete('/api/v1/offices/1', content_type='application/json')
     response_data = response.get_json()
     assert response_data["data"]["message"] == "political office sucessfully deleted"
-
-
 
 
