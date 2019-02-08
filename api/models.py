@@ -54,6 +54,23 @@ class Politico():
         self.political_offices.append(new_office)
         return new_office
 
+    def get_political_offices(self):
+        if self.office_id_count > 0:
+            return self.political_offices
+
+    def get_political_office(self, id):
+        for office in self.political_offices:
+            if office["id"] == id:
+                return office
+        return []
+
+    def delete_political_office(self,id):
+        office = self.get_political_office(id)
+        if (len(office) == 0):
+            return False
+        self.political_offices.remove(office)
+        return True
+
 class PoliticalParty(dict):
     def __init__(self, id, name, hq, logo_url):
         self["id"] = id

@@ -45,7 +45,25 @@ def test_create_political_office(client):
     assert response_data["data"]["office_type"] == "federal"
     assert "id" in response_data["data"]
 
+def test_get_political_offices(client):
+    response = client.get('/api/v1/offices', content_type='application/json')
+    response_data = response.get_json()
+    assert len(response_data["data"]) == 1
+    assert response_data["data"][0]["name"] == "president"
+    assert response_data["data"][0]["office_type"] == "federal"
+    assert "id" in response_data["data"][0]
 
+
+def test_get_political_office(client):
+    response = client.get('/api/v1/offices/1', content_type='application/json')
+    response_data = response.get_json()
+    assert "id" in response_data["data"]
+    assert response_data["data"]["id"] == 1
+
+def test_delete_political_office(client):
+    response = client.delete('/api/v1/offices/1', content_type='application/json')
+    response_data = response.get_json()
+    assert response_data["data"]["message"] == "political office sucessfully deleted"
 
 
 
