@@ -25,6 +25,18 @@ class Politico():
         self.political_parties.append(new_party)
         return new_party
     
+    def edit_political_party(self, id, name):
+        party = self.get_political_party(id)
+        if(len(party)):
+            party_index = self.political_parties.index(party)
+            self.political_parties[party_index]["name"] = name
+            return {
+                "id": party["id"],
+                "name": name
+            }
+        else:
+            raise InputError('party not found')
+
     def get_political_parties(self):
         if self.party_id_count > 0:
             return self.political_parties
@@ -41,7 +53,6 @@ class Politico():
             return False
         self.political_parties.remove(party)
         return True
-        
 
     def create_political_office(self, name, office_type):
         if name is None or len(name) == 0:
@@ -70,7 +81,19 @@ class Politico():
             return False
         self.political_offices.remove(office)
         return True
-
+    
+    def edit_political_office(self, id, name):
+        office = self.get_political_office(id)
+        if(len(office)):
+            office_index = self.political_offices.index(office)
+            self.political_offices[office_index]["name"] = name
+            return {
+                "id": office["id"],
+                "name": name
+            }
+        else:
+            raise InputError('office not found')
+                
 class PoliticalParty(dict):
     def __init__(self, id, name, hq, logo_url):
         self["id"] = id
