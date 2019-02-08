@@ -84,6 +84,16 @@ def office():
             response ["status"] = 400
             response ["data"] = error.message
             return jsonify(response), response["status"]
+    #get all political offices
+    elif(request.method == 'GET'):
+        political_offices = politico.get_political_offices()
+        response["status"] = 200
+        response["data"] = political_offices
+        return jsonify(response), response["status"]
+    else:
+        pass
+
+
 
 
 

@@ -54,6 +54,19 @@ class Politico():
         self.political_offices.append(new_office)
         return new_office
 
+    def get_political_offices(self):
+        if self.party_id_count > 0:
+            return self.political_offices
+
+    
+
+
+
+
+
+
+
+
 class PoliticalParty(dict):
     def __init__(self, id, name, hq, logo_url):
         self["id"] = id
