@@ -93,7 +93,28 @@ def office():
     else:
         pass
 
+@v1.route("/offices/<int:id>", methods=["GET", "DELETE", "PUT"])
+def get_office(id):
+    response = {}
+    #get one office
+    if (request.method == "GET"):
+        p_office = politico.get_political_office(id)
+        if(len(p_office) == 0):
+            response["status"] = 404
+            response["error"] = "political party not found"
+        else:
+            response["status"] = 200
+            response["data"] = p_office
+        return jsonify(response), response["status"]
 
-
-
-
+    elif (request.method == "DELETE"):
+        deleted = politico.delete_political_office(id)
+        if(deleted):
+            response["status"] = 200
+            response["data"] = {
+                "message": "political office sucessfully deleted"
+            }
+        else:
+            response["status"] = 404
+            response["error"] = "political office not found"
+        return jsonify(response), response["status"]
