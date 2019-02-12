@@ -1,3 +1,7 @@
+from api.models.politicalparty import PoliticalParty
+from api.models.politicaloffice import PoliticalOffice
+
+
 class InputError(Exception):
     def __init__(self, message):
         self.message = message
@@ -94,15 +98,3 @@ class Politico():
         else:
             raise InputError('office not found')
                 
-class PoliticalParty(dict):
-    def __init__(self, id, name, hq, logo_url):
-        self["id"] = id
-        self["name"] = name
-        self["hq"] = hq
-        self["logoUrl"] = logo_url
-
-class PoliticalOffice(dict):
-    def __init__(self, id, name, office_type):
-        self["id"] = id
-        self["name"] = name
-        self["office_type"] = office_type
