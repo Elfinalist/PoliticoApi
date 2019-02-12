@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 import json
-from api.models import Politico, InputError
+from api.models.politico import Politico, InputError 
 
 politico = Politico()
 
