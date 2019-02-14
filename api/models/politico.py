@@ -1,11 +1,7 @@
 from api.models.politicalparty import PoliticalParty
 from api.models.politicaloffice import PoliticalOffice
 from api.models.user import User
-
-
-class InputError(Exception):
-    def __init__(self, message):
-        self.message = message
+from api.models.errors import InputError
 
 class Politico():
     def __init__(self):
