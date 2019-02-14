@@ -118,7 +118,6 @@ def test_login(client):
         "password": "password"
     }
     response_data = client.post('/api/v1/auth/login',  data = json.dumps(payload), content_type='application/json')
-    print(response_data.get_json())
     response = response_data.get_json()["data"]
     assert "token" in response
     assert "user" in response
