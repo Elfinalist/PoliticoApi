@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import json
 from api.models.politico import Politico
-from api.models.errors import InputError, DBError 
+from api.models.errors import InputError, DBError, AuthError
 
 politico = Politico()
 
@@ -173,5 +173,33 @@ def signup():
         response["status"] = 500
         response["error"] = "An unknown error occured"
         return jsonify(response), response["status"]
-    
+
+@v1.route("/auth/login", methods=["POST"])
+def login():
+    response = {}
+    try:
+        user_data = request.json
+        email = user_data.get("email")
+        password = user_data.get("password")
+        user = politico.login(email, password)
+        del user["password"]
+        response["status"] = 200
+        response["data"] = {
+            "token": user.create_token(),
+            "user": user
+        }
+        return jsonify(response), response["status"]
+    except InputError as error:
+        response["status"] = 404
+        response["error"] = error.message
+        return jsonify(response), response["status"]
+    except AuthError as error:
+        response["status"] = 401
+        response["error"] = error.message
+        return jsonify(response), response["status"]
+    except Exception as error:
+        response["status"] = 500
+        response["error"] = "An unknown error occured"
+        return jsonify(response), response["status"]
+
     

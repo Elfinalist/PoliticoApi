@@ -99,14 +99,27 @@ class Politico():
         if name is None or len(name) == 0:
             raise InputError ('name is required when creating a user')
         
-        if email is None or len(name) == 0:
+        if email is None or len(email) == 0:
             raise InputError ('email address is required when creating a user')
         
         if password is None or len(password) < 6:
-            raise InputError ('password is required when creating a password and must be at least 6 characters long')
+            raise InputError ('password is required when creating a user and must be at least 6 characters long')
         
         if c_password != password:
             raise InputError ("passwords don't match")
+        user = User.get_user_by_email(email)
+        if user is None:
+            user = User.save_user(name, email, password)
+            return user
+        else:
+            raise InputError('email address already taken')
+
+    def login(self, email, password):
+        if email is None or len(email) == 0:
+            raise InputError ('email address is required when logging in')
         
-        user = User(name, email, password)
+        if password is None:
+            raise InputError ('password is required when logging in')
+
+        user = User.login(email, password)
         return user
