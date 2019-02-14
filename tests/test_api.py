@@ -112,7 +112,17 @@ def test_create_user(client):
     assert user["email"] == payload["email"]
     assert user["name"] == payload["name"]
 
-
+def test_login(client):
+    payload = {
+        "email": "test@test.com",
+        "password": "password"
+    }
+    response_data = client.post('/api/v1/auth/login',  data = json.dumps(payload), content_type='application/json')
+    response = response_data.get_json()["data"]
+    assert "token" in response
+    assert "user" in response
+    user = response["user"]
+    assert user["email"] == payload["email"]
 
 
 

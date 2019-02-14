@@ -14,7 +14,7 @@ def app():
         print(error.message)
         raise SystemExit
 
-@pytest.yield_fixture(autouse=True)
+@pytest.yield_fixture(scope="session")
 def clear_db():
     yield
     Database.destroy_db()

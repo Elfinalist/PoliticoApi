@@ -1,28 +1,28 @@
 import jwt
 from api.database import Database
-from api.models.errors import DBError
+from api.models.errors import DBError, AuthError
 
 secret = "Ypw,U$f]]Q:lXxlADxqVso6}8p+Qey"
 
 class User(dict):
-    def __init__(self, name, email, password):
+    def __init__(self, user_id, name, email, password):
+        self["id"] = user_id
         self["name"] = name
         self["email"] = email
         self["password"] = password
-        self.save_user()
 
-    def save_user(self):
+    @staticmethod
+    def save_user(name, email, password):
         try:
             db = Database.get_connection()
             cur = db.cursor()
             cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s) RETURNING id;", 
-                (self.get("name"), self.get("email"), self.get("password"))
+                (name, email, password)
             )
             insert_id = cur.fetchone()[0]
-            self["id"] = insert_id
             db.commit()
+            return User(insert_id, name, email, password)
         except Exception as error:
-            print(error)
             cur.execute("ROLLBACK")
             db.commit()
             raise DBError('an error occured when creating user')
@@ -37,4 +37,22 @@ class User(dict):
     
     @staticmethod
     def get_user_by_email(email):
-        pass
+        db = Database.get_connection()
+        cur = db.cursor()
+        cur.execute("SELECT * FROM users where email = %s", (email,))
+        user = cur.fetchone()
+        if(user is not None):
+            user_id = user[0]
+            name = user[1]
+            password = user[3]
+            return User(user_id, name, email, password)
+        else:
+            return None
+    
+    @staticmethod
+    def login(email, password):
+        user = User.get_user_by_email(email)
+        if(user is not None and user.get("password") == password):
+            return user
+        
+        raise AuthError("invalid email/password")
