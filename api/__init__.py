@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 def connect_to_db():
     try:    
-        print(app.config.get("DATABASE"))
         connection = psycopg2.connect(**app.config.get("DATABASE"))
         return connection
     except Exception as error:

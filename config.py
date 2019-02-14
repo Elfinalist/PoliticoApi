@@ -42,8 +42,8 @@ class Default(object):
     TESTING = False
     DATABASE = get_db_config()
 
-class TestingConfig(Default):
-    TESTING = False
+class TestingConfig(object):
+    TESTING = True
     DATABASE = {
         "user": "postgres",
         "password": "",
