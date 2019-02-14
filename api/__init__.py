@@ -2,15 +2,35 @@ from flask import Flask, Blueprint
 import psycopg2
 
 from api.v1 import v1
-from api.models.errors import DBError
+from api.models.errors import DBError, ConfigError
 
 app = Flask(__name__)
 
 def connect_to_db():
     try:    
+        db_config = app.config.get("DATABASE")
+
+        if(db_config.get("user") is None):
+            raise ConfigError('config is missing DB_USER environment variable')
+        
+        if(db_config.get("password") is None):
+            raise ConfigError('config is missing DB_PASSWORD environment variable')
+        
+        if(db_config.get("host") is None):
+            raise ConfigError('config is missing DB_HOST environment variable')
+        
+        if(db_config.get("port") is None):
+            raise ConfigError('config is missing DB_PORT environment variable')
+        
+        if(db_config.get("database") is None):
+            raise ConfigError('config is missing DB_NAME environment variable')
+
         connection = psycopg2.connect(**app.config.get("DATABASE"))
         return connection
     except Exception as error:
+        if(isinstance(error, ConfigError)):
+            print(error.message)
+            raise SystemExit
         raise DBError('could not establish a database connection')
 
 def init_db():
@@ -53,9 +73,6 @@ def destroy_db():
     for query in drop_table_queries:
         cur.execute(query)
     con.commit()
-
-
-
 
 def create_app(configuration='config.Default'):
     app.config.from_object(configuration)

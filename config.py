@@ -11,21 +11,6 @@ def get_db_config():
     host = os.getenv("DB_HOST")
     port = os.getenv("DB_PORT")
 
-    if(database is None):
-        raise ConfigError('config is missing DB_NAME environment variable')
-
-    if(user is None):
-        raise ConfigError('config is missing DB_USER environment variable')
-
-    if(password is None):
-        raise ConfigError('config is missing DB_PASSWORD environment variable')
-
-    if(host is None):
-        raise ConfigError('config is missing DB_HOST environment variable')
-    
-    if(port is None):
-        raise ConfigError('config is missing DB_PORT environment variable')
-
     db = {
         "user": user,
         "password": password,
@@ -51,5 +36,6 @@ class TestingConfig(object):
         "port": "5432",
         "database": "test_politico"
     }
+
 
 
