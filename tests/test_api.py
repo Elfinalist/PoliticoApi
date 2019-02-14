@@ -96,4 +96,23 @@ def test_delete_political_office(client):
     response_data = response.get_json()
     assert response_data["data"]["message"] == "political office sucessfully deleted"
 
+def test_create_user(client):
+    payload = {
+        "name": "test",
+        "email": "test@test.com",
+        "password": "password",
+        "confirm_password": "password"
+    }
+
+    response_data = client.post('/api/v1/auth/signup',  data = json.dumps(payload), content_type='application/json')
+    response = response_data.get_json()["data"]
+    assert "token" in response
+    assert "user" in response
+    user = response["user"]
+    assert user["email"] == payload["email"]
+    assert user["name"] == payload["name"]
+
+
+
+
 

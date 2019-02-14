@@ -1,5 +1,6 @@
 from api.models.politicalparty import PoliticalParty
 from api.models.politicaloffice import PoliticalOffice
+from api.models.user import User
 
 
 class InputError(Exception):
@@ -97,4 +98,19 @@ class Politico():
             }
         else:
             raise InputError('office not found')
-                
+
+    def create_user(self, name, email, password, c_password):
+        if name is None or len(name) == 0:
+            raise InputError ('name is required when creating a user')
+        
+        if email is None or len(name) == 0:
+            raise InputError ('email address is required when creating a user')
+        
+        if password is None or len(password) < 6:
+            raise InputError ('password is required when creating a password and must be at least 6 characters long')
+        
+        if c_password != password:
+            raise InputError ("passwords don't match")
+        
+        user = User(name, email, password)
+        return user
