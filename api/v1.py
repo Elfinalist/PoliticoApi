@@ -16,10 +16,11 @@ def parties():
     response = {}
     if(request.method == 'POST'):
         try:
+
             party_data = request.json
-            party_name = party_data["name"]
-            party_hq = party_data["hqAddress"]
-            party_logo = party_data["logoUrl"]
+            party_name = party_data.get("name")
+            party_hq = party_data.get("hqAddress")
+            party_logo = party_data.get("logoUrl")
 
             # create political party
             party = politico.create_political_party(party_name, party_hq, party_logo)
@@ -84,8 +85,8 @@ def office():
     if (request.method == 'POST'):
         try:
             office_data = request.json
-            office_name = office_data["name"]
-            office_type = office_data["office_type"]
+            office_name = office_data.get("name")
+            office_type = office_data.get("office_type")
             #create political office
             office = politico.create_political_office(office_name,office_type)
             response ["status"] = 201
