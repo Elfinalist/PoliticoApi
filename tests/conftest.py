@@ -1,5 +1,4 @@
 import pytest
-import flask
 
 from api import create_app
 from api.database import Database
@@ -14,7 +13,7 @@ def app():
         print(error.message)
         raise SystemExit
 
-@pytest.yield_fixture(scope="session")
+@pytest.yield_fixture(scope="module", autouse=True)
 def clear_db():
     yield
     Database.destroy_db()

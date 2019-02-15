@@ -170,6 +170,7 @@ def signup():
         response["error"] = error.message
         return jsonify(response), response["status"]
     except Exception as error:
+        print(error)
         response["status"] = 500
         response["error"] = "An unknown error occured"
         return jsonify(response), response["status"]
