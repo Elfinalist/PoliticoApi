@@ -12,6 +12,13 @@ class Politico():
         self.political_offices = []
 
     def create_political_party(self, name, hq, logo_url):
+        """Create A Political Party
+
+        Keyword arguments:
+        name      -- name of the political party (required)
+        hq        -- political party headquarters (required)
+        logo_url  -- image url for party logo (optional)
+        """
         if(name is None or len(name) == 0):
             raise InputError(
                 'name is required when creating a political party')
@@ -31,6 +38,12 @@ class Politico():
             raise InputError('party name is already registered')
 
     def edit_political_party(self, id, name):
+        """Edit a political party
+
+        Keyword arguments:
+        id    -- id of the political party (required)
+        name  -- new political party name (required)
+        """
         party = PoliticalParty.update_political_party(id, name)
         if(party is not None):
             return {
@@ -41,21 +54,41 @@ class Politico():
             raise InputError('party not found')
 
     def get_political_parties(self):
+        """Get Political Parties
+
+        Keyword arguments:
+        """
         return PoliticalParty.get_political_parties()
 
     def get_political_party(self, id):
+        """Get A Political Party
+
+        Keyword arguments:
+        id  -- the id of the party to get
+        """
         party = PoliticalParty.get_party_by_id(id)
         if party is not None:
             return party
         return []
 
     def delete_political_party(self, id):
+        """Delete A Political Party
+
+        Keyword arguments:
+        id  -- the id of the party to delete
+        """
         party = PoliticalParty.delete_political_party(id)
         if (party is None):
             return False
         return True
 
     def create_political_office(self, name, office_type):
+        """Create A Political Office
+
+        Keyword arguments:
+        name         -- name of the political office (required)
+        office_type  -- type of political office (required)
+        """
         if name is None or len(name) == 0:
             raise InputError(
                 'name is required when creating a political office')
@@ -71,21 +104,41 @@ class Politico():
             raise InputError('office name is already registered')
 
     def get_political_offices(self):
+        """Get All Political Office
+
+        Keyword arguments:
+        """
         return PoliticalOffice.get_political_offices()
 
     def get_political_office(self, id):
+        """Get A Political Office
+
+        Keyword arguments:
+        id -- office id of the political office to get
+        """
         office = PoliticalOffice.get_office_by_id(id)
         if office is not None:
             return office
         return []
 
     def delete_political_office(self, id):
+        """Delete A Political Office
+
+        Keyword arguments:
+        id -  office id of the political office to delete
+        """
         office = PoliticalOffice.delete_political_office(id)
         if (office is None):
             return False
         return True
 
     def edit_political_office(self, id, name):
+        """Edit A Political Office
+
+        Keyword arguments:
+        id -    office id of the political office to edit
+        name -  new name of the political office to edit
+        """
         office = PoliticalOffice.update_political_office(id, name)
         if(office is not None):
             return {
@@ -96,6 +149,15 @@ class Politico():
             raise InputError('party not found')
 
     def create_user(self, name, email, password, c_password):
+        """Create A Political Party
+
+        Keyword arguments:
+        name       -- name of the user (required)
+        email      -- email of the user (required)
+        password   -- password of the user (required)
+        c_password -- repeat password to confirm match (required)
+        """
+
         if name is None or len(name) == 0:
             raise InputError('name is required when creating a user')
 
@@ -116,6 +178,12 @@ class Politico():
             raise InputError('email address already taken')
 
     def login(self, email, password):
+        """User Login
+
+        Keyword arguments:
+        email      -- email of the user (required)
+        password   -- password of the user (required)
+        """
         if email is None or len(email) == 0:
             raise InputError('email address is required when logging in')
 
