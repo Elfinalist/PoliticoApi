@@ -21,16 +21,16 @@ class Politico():
         if(logo_url is None):
             logo_url = ""
         
-        self.party_id_count += 1
-        new_party = PoliticalParty(self.party_id_count, name, hq, logo_url)
-        self.political_parties.append(new_party)
-        return new_party
+        party = PoliticalParty.get_party_by_name(name)
+        if party is None:
+            new_party = PoliticalParty.save_party(name, hq, logo_url)
+            return new_party
+        else:
+            raise InputError('party name is already registered') 
     
     def edit_political_party(self, id, name):
-        party = self.get_political_party(id)
-        if(len(party)):
-            party_index = self.political_parties.index(party)
-            self.political_parties[party_index]["name"] = name
+        party = PoliticalParty.update_political_party(id, name)
+        if(party is not None):
             return {
                 "id": party["id"],
                 "name": name
@@ -39,20 +39,19 @@ class Politico():
             raise InputError('party not found')
 
     def get_political_parties(self):
-        if self.party_id_count > 0:
-            return self.political_parties
+        return PoliticalParty.get_political_parties()
 
     def get_political_party(self, id):
-        for party in self.political_parties:
-            if party["id"] == id:
-                return party 
+        party = PoliticalParty.get_party_by_id(id)
+        if party is not None:
+            return party
         return []
         
-    def delete_political_party(self,id):
-        party = self.get_political_party(id)
-        if (len(party) == 0):
+        
+    def delete_political_party(self, id):
+        party = PoliticalParty.delete_political_party(id)
+        if (party is None):
             return False
-        self.political_parties.remove(party)
         return True
 
     def create_political_office(self, name, office_type):
