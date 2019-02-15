@@ -60,39 +60,37 @@ class Politico():
         if office_type is None or len(office_type) == 0:
             raise InputError ('type is required when creating a political office')
 
-        self.office_id_count += 1
-        new_office = PoliticalOffice(self.office_id_count, name, office_type)
-        self.political_offices.append(new_office)
-        return new_office
+        office = PoliticalOffice.get_office_by_name(name)
+        if office is None:
+            office = PoliticalOffice.save_office(name, office_type)
+            return office
+        else:
+            raise InputError('office name is already registered') 
 
     def get_political_offices(self):
-        if self.office_id_count > 0:
-            return self.political_offices
+        return PoliticalOffice.get_political_offices()
 
     def get_political_office(self, id):
-        for office in self.political_offices:
-            if office["id"] == id:
-                return office
+        office = PoliticalOffice.get_office_by_id(id)
+        if office is not None:
+            return office
         return []
 
     def delete_political_office(self,id):
-        office = self.get_political_office(id)
-        if (len(office) == 0):
+        office = PoliticalOffice.delete_political_office(id)
+        if (office is None):
             return False
-        self.political_offices.remove(office)
         return True
     
     def edit_political_office(self, id, name):
-        office = self.get_political_office(id)
-        if(len(office)):
-            office_index = self.political_offices.index(office)
-            self.political_offices[office_index]["name"] = name
+        office = PoliticalOffice.update_political_office(id, name)
+        if(office is not None):
             return {
                 "id": office["id"],
                 "name": name
             }
         else:
-            raise InputError('office not found')
+            raise InputError('party not found')
 
     def create_user(self, name, email, password, c_password):
         if name is None or len(name) == 0:

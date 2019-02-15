@@ -111,4 +111,4 @@ class PoliticalParty(dict):
             print(error)
             cur.execute("ROLLBACK")
             db.commit()
-            raise DBError('an error occured when deleting political party')
+            raise DBError('an error occured when getting political parties')
