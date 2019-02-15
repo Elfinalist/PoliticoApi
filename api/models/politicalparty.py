@@ -1,21 +1,24 @@
 from api.database import Database
 from api.models.errors import DBError, AuthError
 
+
 class PoliticalParty(dict):
     def __init__(self, id, name, hq, logo_url):
         self["id"] = id
         self["name"] = name
         self["hq"] = hq
         self["logoUrl"] = logo_url
-    
+
     @staticmethod
     def save_party(name, hq, logo_url):
         try:
             db = Database.get_connection()
             cur = db.cursor()
-            cur.execute("INSERT INTO political_party (name, hq, logo_url) VALUES (%s, %s, %s) RETURNING id;", 
-                (name, hq, logo_url)
-            )
+            cur.execute(
+                "INSERT INTO political_party (name, hq, logo_url) VALUES (%s, %s, %s) RETURNING id;",
+                (name,
+                 hq,
+                 logo_url))
             insert_id = cur.fetchone()[0]
             db.commit()
             return PoliticalParty(insert_id, name, hq, logo_url)
@@ -24,7 +27,7 @@ class PoliticalParty(dict):
             cur.execute("ROLLBACK")
             db.commit()
             raise DBError('an error occured when creating political party')
-    
+
     @staticmethod
     def get_party_by_name(name):
         db = Database.get_connection()
@@ -39,7 +42,7 @@ class PoliticalParty(dict):
             return PoliticalParty(party_id, name, hq, logo_url)
         else:
             return None
-    
+
     @staticmethod
     def get_party_by_id(party_id):
         db = Database.get_connection()
@@ -53,7 +56,7 @@ class PoliticalParty(dict):
             return PoliticalParty(party_id, name, hq, logo_url)
         else:
             return None
-    
+
     @staticmethod
     def update_political_party(party_id, name):
         try:
@@ -61,20 +64,19 @@ class PoliticalParty(dict):
             if(party is not None):
                 db = Database.get_connection()
                 cur = db.cursor()
-                cur.execute("UPDATE political_party SET name = %s where id = %s", 
-                    (name, party_id)
-                )
+                cur.execute(
+                    "UPDATE political_party SET name = %s where id = %s", (name, party_id))
                 db.commit()
                 party["name"] = name
                 return party
             else:
-                return None 
+                return None
         except Exception as error:
             print(error)
             cur.execute("ROLLBACK")
             db.commit()
             raise DBError('an error occured when updating political party')
-    
+
     @staticmethod
     def delete_political_party(party_id):
         try:
@@ -82,17 +84,18 @@ class PoliticalParty(dict):
             if(party is not None):
                 db = Database.get_connection()
                 cur = db.cursor()
-                cur.execute("DELETE FROM political_party WHERE id = %s", (party_id,))
+                cur.execute(
+                    "DELETE FROM political_party WHERE id = %s", (party_id,))
                 db.commit()
                 return party
             else:
-                return None 
+                return None
         except Exception as error:
             print(error)
             cur.execute("ROLLBACK")
             db.commit()
             raise DBError('an error occured when deleting political party')
-    
+
     @staticmethod
     def get_political_parties():
         try:
