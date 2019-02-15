@@ -4,6 +4,7 @@ from api.models.errors import ConfigError
 
 load_dotenv('.env')
 
+
 def get_db_config():
     database = os.getenv("DB_NAME")
     user = os.getenv("DB_USER")
@@ -27,6 +28,7 @@ class Default(object):
     TESTING = False
     DATABASE = get_db_config()
 
+
 class TestingConfig(object):
     TESTING = True
     DATABASE = {
@@ -36,6 +38,3 @@ class TestingConfig(object):
         "port": "5432",
         "database": "test_politico"
     }
-
-
-

@@ -2,27 +2,33 @@ import psycopg2
 
 from api.models.errors import DBError, ConfigError
 
+
 class Database(object):
     def __init__(self, db_config):
-        global conn 
+        global conn
         conn = self.connect_to_db(db_config)
 
     def connect_to_db(self, db_config):
-        try:    
+        try:
             if(db_config.get("user") is None):
-                raise ConfigError('config is missing DB_USER environment variable')
-            
+                raise ConfigError(
+                    'config is missing DB_USER environment variable')
+
             if(db_config.get("password") is None):
-                raise ConfigError('config is missing DB_PASSWORD environment variable')
-            
+                raise ConfigError(
+                    'config is missing DB_PASSWORD environment variable')
+
             if(db_config.get("host") is None):
-                raise ConfigError('config is missing DB_HOST environment variable')
-            
+                raise ConfigError(
+                    'config is missing DB_HOST environment variable')
+
             if(db_config.get("port") is None):
-                raise ConfigError('config is missing DB_PORT environment variable')
-            
+                raise ConfigError(
+                    'config is missing DB_PORT environment variable')
+
             if(db_config.get("database") is None):
-                raise ConfigError('config is missing DB_NAME environment variable')
+                raise ConfigError(
+                    'config is missing DB_NAME environment variable')
 
             connection = psycopg2.connect(**db_config)
             return connection
@@ -80,7 +86,7 @@ class Database(object):
         for query in drop_table_queries:
             cur.execute(query)
         conn.commit()
-    
+
     @staticmethod
     def get_connection():
         return conn

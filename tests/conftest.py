@@ -4,6 +4,7 @@ from api import create_app
 from api.database import Database
 from api.models.errors import ConfigError
 
+
 @pytest.fixture
 def app():
     try:
@@ -12,6 +13,7 @@ def app():
     except ConfigError as error:
         print(error.message)
         raise SystemExit
+
 
 @pytest.yield_fixture(scope="module", autouse=True)
 def clear_db():

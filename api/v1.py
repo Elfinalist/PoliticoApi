@@ -7,6 +7,7 @@ politico = Politico()
 
 v1 = Blueprint('v1_api', __name__, url_prefix='/api/v1')
 
+
 @v1.route("/")
 def hello():
     return "Hello World!"
@@ -24,7 +25,8 @@ def parties():
             party_logo = party_data.get("logoUrl")
 
             # create political party
-            party = politico.create_political_party(party_name, party_hq, party_logo)
+            party = politico.create_political_party(
+                party_name, party_hq, party_logo)
             response["status"] = 201
             response["data"] = party
             return jsonify(response)
@@ -42,10 +44,11 @@ def parties():
     else:
         pass
 
+
 @v1.route("/parties/<int:id>", methods=["GET", "DELETE", "PUT"])
 def party(id):
     response = {}
-    #get one party
+    # get one party
     if(request.method == 'GET'):
         p_party = politico.get_political_party(id)
         if(len(p_party) == 0):
@@ -55,8 +58,8 @@ def party(id):
             response["status"] = 200
             response["data"] = p_party
         return jsonify(response), response["status"]
-    #delete party
-    elif(request.method =='DELETE'):
+    # delete party
+    elif(request.method == 'DELETE'):
         deleted = politico.delete_political_party(id)
         if(deleted):
             response["status"] = 200
@@ -80,6 +83,7 @@ def party(id):
             response["error"] = error.message
             return jsonify(response), response["status"]
 
+
 @v1.route("/offices", methods=["POST", "GET"])
 def office():
     response = {}
@@ -88,16 +92,16 @@ def office():
             office_data = request.json
             office_name = office_data.get("name")
             office_type = office_data.get("office_type")
-            #create political office
-            office = politico.create_political_office(office_name,office_type)
-            response ["status"] = 201
-            response ["data"] = office
+            # create political office
+            office = politico.create_political_office(office_name, office_type)
+            response["status"] = 201
+            response["data"] = office
             return jsonify(response), response["status"]
         except InputError as error:
-            response ["status"] = 400
-            response ["data"] = error.message
+            response["status"] = 400
+            response["data"] = error.message
             return jsonify(response), response["status"]
-    #get all political offices
+    # get all political offices
     elif(request.method == 'GET'):
         political_offices = politico.get_political_offices()
         response["status"] = 200
@@ -106,10 +110,11 @@ def office():
     else:
         pass
 
+
 @v1.route("/offices/<int:id>", methods=["GET", "DELETE", "PUT"])
 def get_office(id):
     response = {}
-    #get one office
+    # get one office
     if (request.method == "GET"):
         p_office = politico.get_political_office(id)
         if(len(p_office) == 0):
@@ -144,6 +149,7 @@ def get_office(id):
             response["error"] = error.message
             return jsonify(response), response["status"]
 
+
 @v1.route("/auth/signup", methods=["POST"])
 def signup():
     response = {}
@@ -175,6 +181,7 @@ def signup():
         response["error"] = "An unknown error occured"
         return jsonify(response), response["status"]
 
+
 @v1.route("/auth/login", methods=["POST"])
 def login():
     response = {}
@@ -203,5 +210,3 @@ def login():
         response["status"] = 500
         response["error"] = "An unknown error occured"
         return jsonify(response), response["status"]
-
-    

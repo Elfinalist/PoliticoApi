@@ -4,6 +4,7 @@ from api.models.errors import DBError, AuthError
 
 secret = "Ypw,U$f]]Q:lXxlADxqVso6}8p+Qey"
 
+
 class User(dict):
     def __init__(self, user_id, name, email, password):
         self["id"] = user_id
@@ -16,9 +17,11 @@ class User(dict):
         try:
             db = Database.get_connection()
             cur = db.cursor()
-            cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s) RETURNING id;", 
-                (name, email, password)
-            )
+            cur.execute(
+                "INSERT INTO users (name, email, password) VALUES (%s, %s, %s) RETURNING id;",
+                (name,
+                 email,
+                 password))
             insert_id = cur.fetchone()[0]
             db.commit()
             return User(insert_id, name, email, password)
@@ -26,15 +29,15 @@ class User(dict):
             cur.execute("ROLLBACK")
             db.commit()
             raise DBError('an error occured when creating user')
-    
+
     def create_token(self):
-        token =  jwt.encode({'id': self["id"]}, secret, algorithm ='HS256')
+        token = jwt.encode({'id': self["id"]}, secret, algorithm='HS256')
         return token.decode('utf-8')
 
     @staticmethod
     def get_user_by_id(user_id):
         pass
-    
+
     @staticmethod
     def get_user_by_email(email):
         db = Database.get_connection()
@@ -48,11 +51,11 @@ class User(dict):
             return User(user_id, name, email, password)
         else:
             return None
-    
+
     @staticmethod
     def login(email, password):
         user = User.get_user_by_email(email)
         if(user is not None and user.get("password") == password):
             return user
-        
+
         raise AuthError("invalid email/password")

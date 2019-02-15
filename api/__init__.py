@@ -11,6 +11,3 @@ def create_app(configuration='config.Default'):
     database.init_db()
     app.register_blueprint(v1)
     return app
-
-    
-
