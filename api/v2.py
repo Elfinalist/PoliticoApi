@@ -5,15 +5,15 @@ from api.models.errors import InputError, DBError, AuthError
 
 politico = Politico()
 
-v1 = Blueprint('v1_api', __name__, url_prefix='/api/v1')
+v2 = Blueprint('v2_api', __name__, url_prefix='/api/v2')
 
 
-@v1.route("/")
+@v2.route("/")
 def hello():
     return "Hello World!"
 
 
-@v1.route("/parties", methods=["POST", "GET"])
+@v2.route("/parties", methods=["POST", "GET"])
 def parties():
     response = {}
     if(request.method == 'POST'):
@@ -45,7 +45,7 @@ def parties():
         pass
 
 
-@v1.route("/parties/<int:id>", methods=["GET", "DELETE", "PUT"])
+@v2.route("/parties/<int:id>", methods=["GET", "DELETE", "PUT"])
 def party(id):
     response = {}
     # get one party
@@ -84,7 +84,7 @@ def party(id):
             return jsonify(response), response["status"]
 
 
-@v1.route("/offices", methods=["POST", "GET"])
+@v2.route("/offices", methods=["POST", "GET"])
 def office():
     response = {}
     if (request.method == 'POST'):
@@ -111,7 +111,7 @@ def office():
         pass
 
 
-@v1.route("/offices/<int:id>", methods=["GET", "DELETE", "PUT"])
+@v2.route("/offices/<int:id>", methods=["GET", "DELETE", "PUT"])
 def get_office(id):
     response = {}
     # get one office
@@ -150,7 +150,7 @@ def get_office(id):
             return jsonify(response), response["status"]
 
 
-@v1.route("/auth/signup", methods=["POST"])
+@v2.route("/auth/signup", methods=["POST"])
 def signup():
     response = {}
     try:
@@ -168,7 +168,7 @@ def signup():
         }
         return jsonify(response), response["status"]
     except InputError as error:
-        response["status"] = 404
+        response["status"] = 400
         response["error"] = error.message
         return jsonify(response), response["status"]
     except DBError as error:
@@ -182,7 +182,7 @@ def signup():
         return jsonify(response), response["status"]
 
 
-@v1.route("/auth/login", methods=["POST"])
+@v2.route("/auth/login", methods=["POST"])
 def login():
     response = {}
     try:
