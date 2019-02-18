@@ -1,7 +1,7 @@
-from api.models.politicalparty import PoliticalParty
-from api.models.politicaloffice import PoliticalOffice
-from api.models.user import User
-from api.models.errors import InputError
+from api.v2.models.politicalparty import PoliticalParty
+from api.v2.models.politicaloffice import PoliticalOffice
+from api.v2.models.user import User
+from api.v2.models.errors import InputError
 
 
 class Politico():

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from api.models.errors import ConfigError
+from api.v2.models.errors import ConfigError
 
 load_dotenv('.env')
 

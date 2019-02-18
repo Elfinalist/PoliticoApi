@@ -1,5 +1,5 @@
-from api.database import Database
-from api.models.errors import DBError, AuthError
+from api.v2.database import Database
+from api.v2.models.errors import DBError, AuthError
 
 
 class PoliticalParty(dict):

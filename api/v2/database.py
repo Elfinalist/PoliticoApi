@@ -1,6 +1,6 @@
 import psycopg2
 
-from api.models.errors import DBError, ConfigError
+from api.v2.models.errors import DBError, ConfigError
 
 
 class Database(object):
