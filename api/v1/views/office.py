@@ -6,7 +6,7 @@ politico = Politico()
 
 v1_office = Blueprint('v1_api', __name__, url_prefix='/api/v1/offices')
 
-@v1_office.route("/", methods=["POST", "GET"])
+@v1_office.route("", methods=["POST", "GET"])
 def office():
     response = {}
     if (request.method == 'POST'):

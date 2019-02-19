@@ -1,10 +1,28 @@
 import json
 
+user_token = ""
 
-def test_index(client):
-    response = client.get('/api/v2/')
-    assert response.status_code == 200
+def test_create_user(client): 
+    global user_token
+    payload = {
+        "name": "test",
+        "email": "test@test.com",
+        "password": "password",
+        "confirm_password": "password"
+    }
 
+    response_data = client.post(
+        '/api/v2/auth/signup',
+        data=json.dumps(payload),
+        content_type='application/json'
+        )
+    response = response_data.get_json()["data"]
+    assert "token" in response
+    assert "user" in response
+    user = response["user"]
+    user_token = response["token"]
+    assert user["email"] == payload["email"]
+    assert user["name"] == payload["name"]
 
 def test_create_political_party(client):
     payload = {
@@ -15,7 +33,8 @@ def test_create_political_party(client):
     response = client.post(
         '/api/v2/parties',
         data=json.dumps(payload),
-        content_type='application/json')
+        content_type='application/json',
+        headers={'Authorization': user_token})
     response_data = response.get_json()
     assert response_data["status"] == 201
     assert response_data["data"]["name"] == "Kanu"
@@ -25,7 +44,7 @@ def test_create_political_party(client):
 
 
 def test_get_political_parties(client):
-    response = client.get('/api/v2/parties', content_type='application/json')
+    response = client.get('/api/v2/parties', content_type='application/json', headers={'Authorization': user_token})
     response_data = response.get_json()
     assert len(response_data["data"]) == 1
     assert response_data["data"][0]["name"] == "Kanu"
@@ -35,7 +54,7 @@ def test_get_political_parties(client):
 
 
 def test_get_political_party(client):
-    response = client.get('/api/v2/parties/1', content_type='application/json')
+    response = client.get('/api/v2/parties/1', content_type='application/json', headers={'Authorization': user_token})
     response_data = response.get_json()
     assert "id" in response_data["data"]
     assert response_data["data"]["id"] == 1
@@ -49,7 +68,8 @@ def test_edit_political_party(client):
     response = client.put(
         '/api/v2/parties/1',
         data=json.dumps(payload),
-        content_type='application/json')
+        content_type='application/json', 
+        headers={'Authorization': user_token})
     response_data = response.get_json()
     assert "id" in response_data["data"]
     assert response_data["data"]["id"] == 1
@@ -58,7 +78,7 @@ def test_edit_political_party(client):
 
 def test_delete_political_party(client):
     response = client.delete(
-        '/api/v2/parties/1', content_type='application/json')
+        '/api/v2/parties/1', content_type='application/json', headers={'Authorization': user_token})
     response_data = response.get_json()
     assert response_data["data"]["message"] == "political party sucessfully deleted"
 
@@ -72,7 +92,8 @@ def test_create_political_office(client):
     response = client.post(
         'api/v2/offices',
         data=json.dumps(payload),
-        content_type='application/json')
+        content_type='application/json',
+        headers={'Authorization': user_token})
     response_data = response.get_json()
     assert response_data["status"] == 201
     assert response_data["data"]["name"] == "president"
@@ -81,7 +102,7 @@ def test_create_political_office(client):
 
 
 def test_get_political_offices(client):
-    response = client.get('/api/v2/offices', content_type='application/json')
+    response = client.get('/api/v2/offices', content_type='application/json', headers={'Authorization': user_token})
     response_data = response.get_json()
     assert len(response_data["data"]) == 1
     assert response_data["data"][0]["name"] == "president"
@@ -90,7 +111,7 @@ def test_get_political_offices(client):
 
 
 def test_get_political_office(client):
-    response = client.get('/api/v2/offices/1', content_type='application/json')
+    response = client.get('/api/v2/offices/1', content_type='application/json', headers={'Authorization': user_token})
     response_data = response.get_json()
     assert "id" in response_data["data"]
     assert response_data["data"]["id"] == 1
@@ -104,7 +125,8 @@ def test_edit_political_office(client):
     response = client.put(
         '/api/v2/offices/1',
         data=json.dumps(payload),
-        content_type='application/json')
+        content_type='application/json',
+        headers={'Authorization': user_token})
     response_data = response.get_json()
     print(response)
     assert "id" in response_data["data"]
@@ -114,29 +136,9 @@ def test_edit_political_office(client):
 
 def test_delete_political_office(client):
     response = client.delete(
-        '/api/v2/offices/1', content_type='application/json')
+        '/api/v2/offices/1', content_type='application/json', headers={'Authorization': user_token})
     response_data = response.get_json()
     assert response_data["data"]["message"] == "political office sucessfully deleted"
-
-
-def test_create_user(client):
-    payload = {
-        "name": "test",
-        "email": "test@test.com",
-        "password": "password",
-        "confirm_password": "password"
-    }
-
-    response_data = client.post(
-        '/api/v2/auth/signup',
-        data=json.dumps(payload),
-        content_type='application/json')
-    response = response_data.get_json()["data"]
-    assert "token" in response
-    assert "user" in response
-    user = response["user"]
-    assert user["email"] == payload["email"]
-    assert user["name"] == payload["name"]
 
 
 def test_login(client):

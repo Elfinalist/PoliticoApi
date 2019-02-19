@@ -1,7 +1,4 @@
 import json
-def test_index(client):
-    response = client.get('/api/v1/')
-    assert response.status_code == 200
 
 def test_create_political_party(client):
     payload = {

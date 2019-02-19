@@ -9,7 +9,7 @@ politico = Politico()
 
 v2_party = Blueprint('v2_api_parties', __name__, url_prefix='/api/v2/parties')
 
-@v2_party.route("/", methods=["POST", "GET"]) 
+@v2_party.route("", methods=["POST", "GET"]) 
 @login_required
 def parties():
     response = {}
