@@ -1,8 +1,8 @@
 import pytest
 
 from api import create_app
-from api.database import Database
-from api.models.errors import ConfigError
+from api.v2.database import Database
+from api.v2.models.errors import ConfigError
 
 
 @pytest.fixture

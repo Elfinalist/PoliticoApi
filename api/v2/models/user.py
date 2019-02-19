@@ -1,6 +1,6 @@
 import jwt
-from api.database import Database
-from api.models.errors import DBError, AuthError
+from api.v2.database import Database
+from api.v2.models.errors import DBError, AuthError
 
 secret = "Ypw,U$f]]Q:lXxlADxqVso6}8p+Qey"
 
