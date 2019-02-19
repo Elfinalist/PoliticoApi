@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 import json
+from functools import wraps
 from api.v2.models.politico import Politico
 from api.v2.models.errors import InputError, DBError, AuthError
 
@@ -7,13 +8,11 @@ politico = Politico()
 
 v2 = Blueprint('v2_api', __name__, url_prefix='/api/v2')
 
-
 @v2.route("/")
 def hello():
     return "Hello World!"
 
-
-@v2.route("/parties", methods=["POST", "GET"])
+@v2.route("/parties", methods=["POST", "GET"])        
 def parties():
     response = {}
     if(request.method == 'POST'):
