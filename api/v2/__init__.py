@@ -1,10 +1,13 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 import json
 from functools import wraps
 from api.v2.models.politico import Politico
 from api.v2.models.errors import InputError, DBError, AuthError
+import jwt, os
 
 politico = Politico()
+JWT_PASS = 'Ypw,U$f]]Q:lXxlADxqVso6}8p+Qey'
+JWT_ALGORITHM = 'HS256'
 
 v2 = Blueprint('v2_api', __name__, url_prefix='/api/v2')
 
@@ -12,12 +15,33 @@ v2 = Blueprint('v2_api', __name__, url_prefix='/api/v2')
 def hello():
     return "Hello World!"
 
-@v2.route("/parties", methods=["POST", "GET"])        
+def get_user_id(token):
+   user = jwt.decode(token, JWT_PASS, JWT_ALGORITHM)
+   g.user_id = user.get('user_id', '0')
+   return ['user_id']
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        print(token)
+        if not token:
+            return jsonify({'message': 'Please login to access this route'}), 401
+        try:
+            user = get_user_id(token)
+        except jwt.DecodeError:
+            return jsonify({'message': 'invalid token'}), 401
+        g.user = user
+        return func(*args, **kwargs)
+    return wrapper
+
+@v2.route("/parties", methods=["POST", "GET"]) 
+@login_required
 def parties():
+    print("Got here")
     response = {}
     if(request.method == 'POST'):
         try:
-
             party_data = request.json
             party_name = party_data.get("name")
             party_hq = party_data.get("hqAddress")
@@ -45,6 +69,7 @@ def parties():
 
 
 @v2.route("/parties/<int:id>", methods=["GET", "DELETE", "PUT"])
+@login_required
 def party(id):
     response = {}
     # get one party

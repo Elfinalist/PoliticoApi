@@ -6,11 +6,6 @@ politico = Politico()
 
 v1 = Blueprint('v1_api', __name__, url_prefix='/api/v1')
 
-@v1.route("/")
-def hello():
-    return "Hello World!"
-
-
 @v1.route("/parties", methods=["POST", "GET"])
 def parties():
     response = {}
