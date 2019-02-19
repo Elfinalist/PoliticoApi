@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, g
 import json
 from functools import wraps
 from api.v2.models.politico import Politico
+from api.v2.models.user import User
 from api.v2.models.errors import InputError, DBError, AuthError
 import jwt, os
 
@@ -24,7 +25,6 @@ def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         token = request.headers.get('Authorization')
-        print(token)
         if not token:
             return jsonify({'message': 'Please login to access this route'}), 401
         try:
@@ -35,8 +35,23 @@ def login_required(func):
         return func(*args, **kwargs)
     return wrapper
 
+def get_user_role(user_id):
+    user = User.get(user_id)
+    is_admin = user.get_user_role
+    return is_admin
+
+def is_admin(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        has_admin_rights = get_user_role
+        if not has_admin_rights:
+            return jsonify({'message': 'Please login to access this route'}), 401                
+        return func(*args, **kwargs)
+    return wrapper
+
 @v2.route("/parties", methods=["POST", "GET"]) 
 @login_required
+@is_admin
 def parties():
     print("Got here")
     response = {}
