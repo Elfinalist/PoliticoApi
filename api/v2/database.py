@@ -1,7 +1,5 @@
 import psycopg2
-
 from api.v2.models.errors import DBError, ConfigError
-
 
 class Database(object):
     def __init__(self, db_config):
@@ -60,7 +58,7 @@ class Database(object):
             name VARCHAR (100) NOT NULL,
             email VARCHAR (100) UNIQUE NOT NULL,
             password VARCHAR (100) NOT NULL,
-            user_role SET DEFAULT "FALSE"
+            is_admin BOOLEAN DEFAULT FALSE
         );"""
         create_table_queries.append(create_user_table)
         cur = conn.cursor()
