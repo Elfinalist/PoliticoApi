@@ -148,7 +148,7 @@ class Politico():
         else:
             raise InputError('party not found')
 
-    def create_user(self, name, email, password, c_password):
+    def create_user(self, name, email, password, c_password, is_admin):
         """Create A Political Party
 
         Keyword arguments:
@@ -156,6 +156,7 @@ class Politico():
         email      -- email of the user (required)
         password   -- password of the user (required)
         c_password -- repeat password to confirm match (required)
+        is_admin -- access level of user
         """
 
         if name is None or len(name) == 0:
@@ -172,7 +173,7 @@ class Politico():
             raise InputError("passwords don't match")
         user = User.get_user_by_email(email)
         if user is None:
-            user = User.save_user(name, email, password)
+            user = User.save_user(name, email, password, is_admin)
             return user
         else:
             raise InputError('email address already taken')

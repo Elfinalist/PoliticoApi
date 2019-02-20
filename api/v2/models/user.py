@@ -6,37 +6,50 @@ secret = "Ypw,U$f]]Q:lXxlADxqVso6}8p+Qey"
 
 
 class User(dict):
-    def __init__(self, user_id, name, email, password):
+    def __init__(self, user_id, name, email, password, is_admin):
         self["id"] = user_id
         self["name"] = name
         self["email"] = email
         self["password"] = password
+        self["is_admin"] = is_admin
 
     @staticmethod
-    def save_user(name, email, password):
+    def save_user(name, email, password, is_admin = False):
         try:
             db = Database.get_connection()
             cur = db.cursor()
             cur.execute(
-                "INSERT INTO users (name, email, password) VALUES (%s, %s, %s) RETURNING id;",
+                "INSERT INTO users (name, email, password, is_admin) VALUES (%s, %s, %s, %s) RETURNING id;",
                 (name,
                  email,
-                 password))
+                 password,
+                 is_admin))
             insert_id = cur.fetchone()[0]
             db.commit()
-            return User(insert_id, name, email, password)
+            return User(insert_id, name, email, password, is_admin)
         except Exception as error:
             cur.execute("ROLLBACK")
             db.commit()
             raise DBError('an error occured when creating user')
 
     def create_token(self):
-        token = jwt.encode({'id': self["id"]}, secret, algorithm='HS256')
+        token = jwt.encode({'user_id': self["id"]}, secret, algorithm='HS256')
         return token.decode('utf-8')
 
     @staticmethod
     def get_user_by_id(user_id):
-        pass
+        db = Database.get_connection()
+        cur = db.cursor()
+        cur.execute("SELECT name, email, password, is_admin FROM users where id = %s", (user_id,))
+        user = cur.fetchone()
+        if(user is not None):
+            name = user[0]
+            email = user[1]
+            password = user[2]
+            is_admin = user[3]
+            return User(user_id, name, email, password, is_admin)
+        else:
+            return None
 
     @staticmethod
     def get_user_by_email(email):
@@ -48,7 +61,8 @@ class User(dict):
             user_id = user[0]
             name = user[1]
             password = user[3]
-            return User(user_id, name, email, password)
+            is_admin = user[4]
+            return User(user_id, name, email, password, is_admin)
         else:
             return None
 

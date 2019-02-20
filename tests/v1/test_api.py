@@ -1,7 +1,4 @@
 import json
-def test_index(client):
-    response = client.get('/api/v1/')
-    assert response.status_code == 200
 
 def test_create_political_party(client):
     payload = {
@@ -39,7 +36,7 @@ def test_edit_political_party(client):
         "name": "Kanu Edit"
     }
     data = json.dumps(payload)
-    response = client.put('/api/v1/parties/1', data = json.dumps(payload), content_type='application/json')
+    response = client.patch('/api/v1/parties/1', data = json.dumps(payload), content_type='application/json')
     response_data = response.get_json()
     assert "id" in response_data["data"]
     assert response_data["data"]["id"] == 1
