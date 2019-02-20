@@ -61,6 +61,24 @@ class Database(object):
             is_admin BOOLEAN DEFAULT FALSE
         );"""
         create_table_queries.append(create_user_table)
+
+        create_candidate_table = """CREATE TABLE IF NOT EXISTS candidates(
+            id serial,
+            user_id INTEGER NOT NULL,
+            office_id INTEGER NOT NULL,
+            PRIMARY KEY(user_id, office_id)
+        );"""
+        create_table_queries.append(create_candidate_table)
+
+        create_votes_table = """CREATE TABLE IF NOT EXISTS votes(
+            id serial,
+            user_id INTEGER NOT NULL,
+            office_id INTEGER NOT NULL,
+            candidate_id INTEGER NOT NULL,
+            PRIMARY KEY(user_id, office_id)
+        );"""
+        create_table_queries.append(create_votes_table)
+
         cur = conn.cursor()
 
         for query in create_table_queries:
@@ -79,6 +97,12 @@ class Database(object):
 
         drop_users_table = """ DROP TABLE IF EXISTS users """
         drop_table_queries.append(drop_users_table)
+
+        drop_votes_table = """ DROP TABLE IF EXISTS votes """
+        drop_table_queries.append(drop_votes_table)
+
+        drop_candidates_table = """ DROP TABLE IF EXISTS candidates """
+        drop_table_queries.append(drop_candidates_table)
 
         cur = conn.cursor()
 
