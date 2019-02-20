@@ -65,7 +65,7 @@ def test_edit_political_party(client):
         "name": "Kanu Edit"
     }
     data = json.dumps(payload)
-    response = client.put(
+    response = client.patch(
         '/api/v2/parties/1',
         data=json.dumps(payload),
         content_type='application/json', 

@@ -41,7 +41,7 @@ def parties():
         pass
 
 
-@v2_party.route("/<int:id>", methods=["GET", "DELETE", "PUT"])
+@v2_party.route("/<int:id>", methods=["GET", "DELETE", "PATCH"])
 @login_required
 def party(id):
     response = {}
@@ -67,7 +67,7 @@ def party(id):
             response["status"] = 404
             response["error"] = "political party not found"
         return jsonify(response), response["status"]
-    elif(request.method == 'PUT'):
+    elif(request.method == 'PATCH'):
         try:
             party_data = request.json
             new_name = party_data["name"]
