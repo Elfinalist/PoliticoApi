@@ -43,7 +43,6 @@ def signup():
         response["error"] = "An unknown error occured"
         return jsonify(response), response["status"]
 
-
 @v2_authentication.route("/login", methods=["POST"])
 def login():
     response = {}
