@@ -16,7 +16,7 @@ class Vote(dict):
         cur.execute("SELECT * FROM votes where voter_id = %s", (voter_id,))
         vote = cur.fetchone()
         if(vote is not None):
-            voter_id = vote[0]
+            vote_id = vote[0]
             candidate_id = vote[1]
             voter_id = vote[2]
             office_id = vote[3]
