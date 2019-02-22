@@ -3,7 +3,8 @@ from api.v2.models.errors import DBError, AuthError, InputError
 import psycopg2
 
 class Candidate(dict):
-    def __init__(self, user_id, office_id):
+    def __init__(self, candidate_id, user_id, office_id):
+        self["insert_id"] = candidate_id
         self["user_id"] = user_id
         self["office_id"] = office_id
 
@@ -16,7 +17,7 @@ class Candidate(dict):
         if(candidate is not None):
             user_id = candidate[0]
             office_id = candidate[1]
-            return Candidate(office_id, user_id)
+            return Candidate(candidate_id, office_id, user_id)
         else:
             return None
 
@@ -26,11 +27,12 @@ class Candidate(dict):
             db = Database.get_connection()
             cur = db.cursor()
             cur.execute(
-                "INSERT INTO candidates (office_id, user_id) VALUES (%s, %s);",
+                "INSERT INTO candidates (office_id, user_id) VALUES (%s, %s) returning id;",
                 (office_id,
                 user_id,))
+            candidate_id = cur.fetchone()[0]
             db.commit()
-            return Candidate(office_id, user_id)
+            return Candidate(candidate_id, office_id, user_id)
         except psycopg2.IntegrityError as error:
             print(error)
             raise InputError('This candidate has been registered for this office already')

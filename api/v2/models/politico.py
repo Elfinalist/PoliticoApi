@@ -2,7 +2,8 @@ from api.v2.models.politicalparty import PoliticalParty
 from api.v2.models.politicaloffice import PoliticalOffice
 from api.v2.models.user import User
 from api.v2.models.errors import InputError
-
+from api.v2.models.candidate import Candidate
+from api.v2.models.vote import Vote
 
 class Politico():
     def __init__(self):
@@ -193,3 +194,28 @@ class Politico():
 
         user = User.login(email, password)
         return user
+
+    def create_candidate(self, user_id, office_id):
+        if user_id is None:
+            raise InputError('User id is required')
+
+        if office_id is None:
+            raise InputError('Office id is required')
+
+        candidate = Candidate.save_candidate(user_id, office_id)
+        return candidate
+
+    def create_vote(self, candidate_id, office_id, voter_id):
+        if voter_id is None:
+            raise InputError('User id is required')
+
+        if office_id is None:
+            raise InputError('Office id is required')
+        
+        if candidate_id is None:
+            raise InputError('Office id is required')
+
+        vote = Vote(candidate_id, office_id, voter_id)
+        return vote
+
+    

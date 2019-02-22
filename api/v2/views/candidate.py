@@ -18,7 +18,6 @@ def register_candidate(user_id):
         try:
             candidate_data = request.json
             office_id = candidate_data.get("office_id")
-            user_id = user_id
             #create candidate
             candidate = politico.create_candidate(user_id, office_id)
             response["status"] = 201
